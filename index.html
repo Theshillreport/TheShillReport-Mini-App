@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Farcaster Mini App Tags -->
+    <meta name="fc:frame" content="vNext" />
+    <meta name="fc:miniapp:name" content="Join us on Farcaster" />
+    <meta name="fc:miniapp:icon" content="https://meine-domain.vercel.app/icon.png" />
+    <meta name="fc:frame:button:1" content="Join Farcaster 🚀" />
+    <meta name="fc:frame:post_url" content="https://farcaster.xyz/~/code/VCO1OH" />
+
+    <title>Join us on Farcaster</title>
+  </head>
+
+  <body style="font-family: sans-serif; text-align: center; padding: 40px;">
+    <h1>🚀 Join us on Farcaster</h1>
+    <p>Be part of the open social network revolution.</p>
+
+    <a
+      href="https://farcaster.xyz/~/code/VCO1OH"
+      target="_blank"
+      style="display: inline-block; background: #6c47ff; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; margin-top: 10px;"
+    >
+      Join via Farcaster
+    </a>
+
+    <hr style="margin: 30px 0;" />
+
+    <button id="connectWallet" style="padding: 10px 16px;">💰 Connect ETH Wallet</button>
+    <p id="walletAddress"></p>
+
+    <script type="module">
+      import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.esm.min.js";
+
+      const connectBtn = document.getElementById("connectWallet");
+      const walletText = document.getElementById("walletAddress");
+
+      connectBtn.addEventListener("click", async () => {
+        if (!window.ethereum) {
+          alert("Bitte MetaMask oder eine Wallet mit Ethereum-Unterstützung aktivieren.");
+          return;
+        }
+
+        try {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          const signer = provider.getSigner();
+          const address = await signer.getAddress();
+          walletText.textContent = "✅ Verbundene Wallet: " + address;
+
+          // Deine Einnahme-Adresse (ETH-Adresse)
+          const recipient = "DEINE_ETH_ADRESSE_HIER";
+
+          // Beispiel: Sende 0.001 ETH an dich
+          const tx = await signer.sendTransaction({
+            to: recipient,
+            value: ethers.utils.parseEther("0.001"),
+          });
+
+          alert("Zahlung gesendet! TX Hash: " + tx.hash);
+        } catch (err) {
+          console.error(err);
+          alert("Fehler beim Verbinden oder Senden.");
+        }
+      });
+    </script>
+  </body>
+</html>
