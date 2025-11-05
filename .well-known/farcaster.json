@@ -1,14 +1,106 @@
-{
-  "miniapp": {
-    "version": "1",
-    "name": "The Shill Report",
-    "iconUrl": "https://YOUR_DOMAIN/icon.png",
-    "homeUrl": "https://YOUR_DOMAIN/",
-    "splashImageUrl": "https://YOUR_DOMAIN/splash.png",
-    "splashBackgroundColor": "#000000",
-    "subtitle": "News & Earn",
-    "description": "Mini App für The Shill Report – Wallet connect, staking demo & earnings.",
-    "primaryCategory": "finance",
-    "tags": ["crypto","news","staking","earn"]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Shill Report IO — Earn While You Trade</title>
+
+<style>
+  body {
+    margin: 0;
+    background-color: #0b0b0f;
+    font-family: 'Inter', Arial, sans-serif;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
   }
-}
+  .card {
+    background: #111;
+    border: 1px solid #ff7b00;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255,123,0,0.2);
+  }
+  h1 {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    color: #ff7b00;
+    margin-bottom: 1rem;
+  }
+  h2 {
+    font-size: 2rem;
+    color: #fff;
+    margin: 0.5rem 0;
+  }
+  .apy {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff7b00;
+    margin: 0.5rem 0;
+  }
+  .description {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 2rem;
+  }
+  button {
+    background: linear-gradient(90deg, #ff9900, #ff6600);
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.3s;
+  }
+  button:hover {
+    opacity: 0.9;
+  }
+  footer {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #666;
+  }
+</style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>THESHILLREPORT.IO</h1>
+    <h2>EARN WHILE<br>YOU TRADE</h2>
+
+    <div class="apy">APY 14.6 % (DEMO)</div>
+    <div class="description">
+      Simulated staking dashboard inspired by Wasabi — now in orange for The Shill Report.
+    </div>
+
+    <button onclick="connectWallet()">🔗 Connect Wallet</button>
+    <div id="wallet-status" style="margin-top:1rem; font-size:0.85rem; color:#ff7b00;">
+      Wallet not connected
+    </div>
+  </div>
+
+  <footer>© 2025 The Shill Report IO — Demo Frame</footer>
+
+<script type="module">
+  import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.esm.min.js";
+
+  async function connectWallet() {
+    if (!window.ethereum) {
+      alert("Please install MetaMask or use a compatible wallet.");
+      return;
+    }
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    const address = await signer.getAddress();
+    document.getElementById("wallet-status").innerText = "✅ Connected: " + address.slice(0,6) + "..." + address.slice(-4);
+  }
+</script>
+</body>
+</html>
