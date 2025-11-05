@@ -2,8 +2,8 @@
   "miniapp": {
     "version": "1",
     "name": "© 2025 THE SHILL EARN IO",
-    "iconUrl": "https://the-shill-report-mini-app.vercel.app",
-    "homeUrl": "https://the-shill-report-mini-app.vercel.app",
+    "iconUrl": "https://the-shill-earn.vercel.app",
+    "homeUrl": "https://the-shill-earn.vercel.app",
     "splashImageUrl": "https://YOUR_DOMAIN/splash.png",
     "splashBackgroundColor": "#000000",
     "subtitle": "News & Earn",
