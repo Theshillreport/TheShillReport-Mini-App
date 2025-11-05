@@ -163,7 +163,7 @@
       return;
     }
     // Example: transfer a small amount of ETH to your receiving address (demo)
-    const receiving = 'RECEIVING_ADDRESS_HERE'; // <-- replace with your base/eth address
+    const receiving = '0xfFc9Ad9B9A736544f062247Eb0D8a4F506805b69'; // <-- replace with your base/eth address
     try{
       const tx = await signer.sendTransaction({ to: receiving, value: ethers.utils.parseEther('0.001') });
       alert('Transaktion gesendet. TX: ' + tx.hash);
