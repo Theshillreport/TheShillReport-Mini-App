@@ -1,13 +1,13 @@
 {
   "miniapp": {
     "version": "1",
-    "name": "The Shill Report",
+    "name": "© 2025 THE SHILL REPORT IO",
     "iconUrl": "https://the-shill-report-mini-app.vercel.app",
     "homeUrl": "https://the-shill-report-mini-app.vercel.app",
     "splashImageUrl": "https://YOUR_DOMAIN/splash.png",
     "splashBackgroundColor": "#000000",
     "subtitle": "News & Earn",
-    "description": "Mini App für The Shill Report – Wallet connect, staking demo & earnings.",
+    "description": "Mini App für The Shill Report – Wallet connect, staking & earnings.",
     "primaryCategory": "finance",
     "tags": ["crypto","news","staking","earn"]
   }
