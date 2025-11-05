@@ -16,85 +16,72 @@
   <script type="module" src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.esm.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<style>
-  body {
-    margin: 0;
-    background-color: #0b0b0f;
-    font-family: 'Inter', Arial, sans-serif;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-  }
-  .card {
-    background: #111;
-    border: 1px solid #ff7b00;
-    border-radius: 16px;
-    padding: 2rem;
-    width: 320px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(255,123,0,0.2);
-  }
-  h1 {
-    font-size: 1.2rem;
-    letter-spacing: 2px;
-    color: #ff7b00;
-    margin-bottom: 1rem;
-  }
-  h2 {
-    font-size: 2rem;
-    color: #fff;
-    margin: 0.5rem 0;
-  }
-  .apy {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ff7b00;
-    margin: 0.5rem 0;
-  }
-  .description {
-    font-size: 0.9rem;
-    color: #aaa;
-    margin-bottom: 2rem;
-  }
-  button {
-    background: linear-gradient(90deg, #ff9900, #ff6600);
-    border: none;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: 0.3s;
-  }
-  button:hover {
-    opacity: 0.9;
-  }
-  footer {
-    margin-top: 2rem;
-    font-size: 0.8rem;
-    color: #666;
-  }
-</style>
+  <style>
+    :root{
+      --bg:#050607;
+      --neon:#7CFF3C;
+      --neon-2:#A0FF6A;
+      --panel:#0b0c0d;
+      --muted:#9aa4b2;
+      --btn:#7CFF3C;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#020203,#061018);}
+    body{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:#e6eef6;}
+    .container{max-width:420px;margin:20px auto;padding:18px;}
+    .header{text-align:center;margin-top:6px;}
+    .logo{font-size:20px;font-weight:700;display:flex;gap:10px;align-items:center;justify-content:center}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:16px;padding:18px;margin-top:18px; box-shadow:0 6px 20px rgba(0,0,0,0.6); border:1px solid rgba(124,255,60,0.06);}
+    .big-apy{font-size:28px;color:var(--neon);font-weight:800;margin:10px 0;}
+    .muted{color:var(--muted);font-size:13px;}
+    .btn{display:inline-block;background:var(--btn);color:#00110a;padding:12px 18px;border-radius:40px;font-weight:700;text-decoration:none; border:none; cursor:pointer;}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff;padding:8px 12px;border-radius:10px;}
+    .connect-row{display:flex;justify-content:space-between;align-items:center; gap:10px;}
+    .wallet{background:#071017;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);font-size:14px;}
+    .chart-wrap{margin-top:12px;background:linear-gradient(180deg, rgba(12,16,17,0.6), rgba(0,0,0,0.4));padding:12px;border-radius:12px;border:1px solid rgba(124,255,60,0.05);}
+    .large-cta{margin-top:18px;text-align:center;}
+    .tag{display:inline-block;font-size:12px;padding:6px 8px;border-radius:999px;background:rgba(124,255,60,0.06);color:var(--neon);font-weight:700;margin-right:6px;}
+    .tiny{font-size:12px;color:var(--muted);}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:12px;}
+  </style>
 </head>
-
 <body>
-  <div class="card">
-    <h1>THESHILLREPORT.IO</h1>
-    <h2>EARN WHILE<br>YOU READ</h2>
-
-    <div class="apy">APY 14.6 % (DEMO)</div>
-    <div class="description">
-      Simulated staking dashboard inspired by Wasabi — now in orange for The Shill Report.
+  <div class="container">
+    <div class="header">
+      <div class="logo">📣 The Shill Report</div>
+      <div class="muted">Your Web3 news & insights mini-app for Farcaster.</div>
     </div>
 
-    <button onclick="connectWallet()">🔗 CONNECT WALLET</button>
-    <div id="wallet-status" style="margin-top:1rem; font-size:0.85rem; color:#ff7b00;">
-      WALLET NOT CONNECTED
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="tag">EARNING</div>
+          <div class="big-apy" id="apyValue">14.62%</div>
+          <div class="muted">Annual Percentage Yield</div>
+        </div>
+        <div style="text-align:right">
+          <div class="muted">Balance</div>
+          <div style="font-size:22px;font-weight:700" id="balanceDisplay">$0.00</div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <canvas id="apyChart" width="360" height="160"></canvas>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <button class="btn" id="enterBtn">ENTER</button>
+        <button class="btn-ghost" id="fundBtn">FUND WALLET (USDC)</button>
+      </div>
+
+      <hr style="margin-top:12px;border:none;border-top:1px solid rgba(255,255,255,0.03)"/>
+
+      <div class="connect-row">
+        <div class="wallet" id="walletInfo">Wallet not connected</div>
+        <button class="btn" id="connectBtn">💰 Connect ETH Wallet</button>
+      </div>
+
+      <div style="margin-top:8px" class="tiny">Hinweis: Dies ist ein Demo-Interface. Für echtes Staking & Earn wird ein Smart Contract / Backend benötigt.</div>
     </div>
-  </div>
 
     <footer>© 2025 THE SHILL REPORT IO</footer>
   </div>
