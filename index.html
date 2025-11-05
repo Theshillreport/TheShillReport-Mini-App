@@ -3,14 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Shill Report IO — Earn While You Trade</title>
-
-    // --- CONFIG ---
-    const TOKEN_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; // USDC on Base
-    const RECEIVER_ADDRESS = "0xYourWalletAddressHere"; // 👉 deine Adresse hier einsetzen!
+<title>The Shill Report IO — Earn While You Read</title>
 
 <style>
-
   body {
     margin: 0;
     background-color: #0b0b0f;
@@ -77,20 +72,20 @@
 <body>
   <div class="card">
     <h1>THESHILLREPORT.IO</h1>
-    <h2>EARN WHILE<br>YOU TRADE</h2>
+    <h2>EARN WHILE<br>YOU READ</h2>
 
-    <div class="apy">APY 14.6 % (DEMO)</div>
+    <div class="apy">APY 14.6 % </div>
     <div class="description">
-      Simulated staking dashboard inspired by Wasabi — now in orange for The Shill Report.
+      
     </div>
 
-    <button onclick="connectWallet()">🔗 Connect Wallet</button>
+    <button onclick="connectWallet()">🔗 CONNECT WALLET</button>
     <div id="wallet-status" style="margin-top:1rem; font-size:0.85rem; color:#ff7b00;">
-      Wallet not connected
+      WALLET NOT CONNECTED
     </div>
   </div>
 
-  <footer>© 2025 The Shill Report IO — Demo Frame</footer>
+  <footer>© 2025 THE SHILL REPORT IO — </footer>
 
 <script type="module">
   import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.esm.min.js";
@@ -104,7 +99,7 @@
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     const address = await signer.getAddress();
-    document.getElementById("wallet-status").innerText = "✅ Connected: " + address.slice(0,6) + "..." + address.slice(-4);
+    document.getElementById("wallet-status").innerText = "✅ CONNECTED: " + address.slice(0,6) + "..." + address.slice(-4);
   }
 </script>
 </body>
