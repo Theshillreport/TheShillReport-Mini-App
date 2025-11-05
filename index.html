@@ -1,77 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Shill Report - Mini App</title>
 
-  <!-- Mini App Embed Meta Tag -->
-  <meta name="fc:miniapp" content='{
-    "version":"1",
-    "imageUrl":"https://your-domain.com/og-image.png",
-    "button":{
-      "title":"Open The Shill Report",
-      "action":{
-        "type":"launch_miniapp",
-        "name":"The Shill Report",
-        "url":"https://theshillreport.github.io/TheShillReport-Mini-App/",
-        "splashImageUrl":"https://your-domain.com/icon.png",
-        "splashBackgroundColor":"#ffffff"
-      }
-    }
-  }' />
+  <!-- Farcaster Mini App Tags -->
+  <meta name="fc:frame" content="vNext" />
+  <meta name="fc:miniapp:name" content="The Shill Report" />
+  <meta name="fc:miniapp:icon" content="https://YOUR_DOMAIN/icon.png" />
+  <meta name="fc:frame:button:1" content="Open App" />
+  <meta name="fc:frame:post_url" content="https://YOUR_DOMAIN/" />
 
-  <title>The Shill Report</title>
+  <!-- Ethers + Chart.js (CDN) -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.esm.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
-    body { font-family:sans-serif; text-align:center; padding: 40px; }
-    .btn { display:inline-block; background:#4A90E2; color:white; padding:12px 20px; border-radius:8px; text-decoration:none; }
+    :root{
+      --bg:#050607;
+      --neon:#7CFF3C;
+      --neon-2:#A0FF6A;
+      --panel:#0b0c0d;
+      --muted:#9aa4b2;
+      --btn:#7CFF3C;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#020203,#061018);}
+    body{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:#e6eef6;}
+    .container{max-width:420px;margin:20px auto;padding:18px;}
+    .header{text-align:center;margin-top:6px;}
+    .logo{font-size:20px;font-weight:700;display:flex;gap:10px;align-items:center;justify-content:center}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:16px;padding:18px;margin-top:18px; box-shadow:0 6px 20px rgba(0,0,0,0.6); border:1px solid rgba(124,255,60,0.06);}
+    .big-apy{font-size:28px;color:var(--neon);font-weight:800;margin:10px 0;}
+    .muted{color:var(--muted);font-size:13px;}
+    .btn{display:inline-block;background:var(--btn);color:#00110a;padding:12px 18px;border-radius:40px;font-weight:700;text-decoration:none; border:none; cursor:pointer;}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff;padding:8px 12px;border-radius:10px;}
+    .connect-row{display:flex;justify-content:space-between;align-items:center; gap:10px;}
+    .wallet{background:#071017;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);font-size:14px;}
+    .chart-wrap{margin-top:12px;background:linear-gradient(180deg, rgba(12,16,17,0.6), rgba(0,0,0,0.4));padding:12px;border-radius:12px;border:1px solid rgba(124,255,60,0.05);}
+    .large-cta{margin-top:18px;text-align:center;}
+    .tag{display:inline-block;font-size:12px;padding:6px 8px;border-radius:999px;background:rgba(124,255,60,0.06);color:var(--neon);font-weight:700;margin-right:6px;}
+    .tiny{font-size:12px;color:var(--muted);}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:12px;}
   </style>
 </head>
 <body>
-  <h1>📣 The Shill Report</h1>
-  <p>Your Web3 news & insights mini-app for Farcaster.</p>
+  <div class="container">
+    <div class="header">
+      <div class="logo">📣 The Shill Report</div>
+      <div class="muted">Your Web3 news & insights mini-app for Farcaster.</div>
+    </div>
 
-  <a href="https://theshillreport.github.io/TheShillReport-Mini-App/" target="_blank" class="btn">Open App</a>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="tag">EARNING</div>
+          <div class="big-apy" id="apyValue">14.62%</div>
+          <div class="muted">Annual Percentage Yield</div>
+        </div>
+        <div style="text-align:right">
+          <div class="muted">Balance</div>
+          <div style="font-size:22px;font-weight:700" id="balanceDisplay">$0.00</div>
+        </div>
+      </div>
 
-  <hr style="margin:30px 0;"/>
+      <div class="chart-wrap">
+        <canvas id="apyChart" width="360" height="160"></canvas>
+      </div>
 
-  <button id="connectWallet" class="btn">💰 Connect ETH Wallet</button>
-  <p id="walletAddress">Wallet not connected</p>
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <button class="btn" id="enterBtn">ENTER</button>
+        <button class="btn-ghost" id="fundBtn">FUND WALLET (USDC)</button>
+      </div>
 
-  <script type="module">
-    import { sdk } from "https://esm.sh/@farcaster/miniapp-sdk";
+      <hr style="margin-top:12px;border:none;border-top:1px solid rgba(255,255,255,0.03)"/>
 
-    async function main(){
-      await sdk.actions.ready();
-      const btn = document.getElementById("connectWallet");
-      const addrDisplay = document.getElementById("walletAddress");
+      <div class="connect-row">
+        <div class="wallet" id="walletInfo">Wallet not connected</div>
+        <button class="btn" id="connectBtn">💰 Connect ETH Wallet</button>
+      </div>
 
-      btn.addEventListener("click", async () => {
-        const provider = await sdk.wallet.getEthereumProvider();
-        if (!provider) {
-          alert("Please install or enable an Ethereum wallet.");
-          return;
-        }
-        const signer = provider.getSigner();
-        const address = await signer.getAddress();
-        addrDisplay.textContent = "🔗 Connected: " + address;
+      <div style="margin-top:8px" class="tiny">Hinweis: Dies ist ein Demo-Interface. Für echtes Staking & Earn wird ein Smart Contract / Backend benötigt.</div>
+    </div>
 
-        // Your receiving ETH address
-        const recipient = "0xfFc9Ad9B9A736544f062247Eb0D8a4F506805b69";
+    <footer>Deployed on YOUR_DOMAIN • Replace contract addresses before mainnet use</footer>
+  </div>
 
-        try {
-          const tx = await signer.sendTransaction({
-            to: recipient,
-            value: sdk.utils.parseEther("0.01") // example amount
-          });
-          alert("Payment sent! TX Hash: " + tx.hash);
-        } catch(err) {
-          console.error(err);
-          alert("Payment failed.");
-        }
-      });
+<script type="module">
+  import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.esm.min.js";
+
+  // Demo-APY Daten (du kannst sie via API ersetzen)
+  const apy = 14.62;
+  const apyEl = document.getElementById('apyValue');
+  apyEl.textContent = apy + '%';
+
+  // Sample growth data for chart
+  const labels = ['Today','1M','3M','6M','1Y'];
+  const dataPoints = [1,1.03,1.08,1.12,1.146];
+
+  // Draw chart
+  const ctx = document.getElementById('apyChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Projected Value (relative)',
+        data: dataPoints,
+        fill: true,
+        borderColor: '#7CFF3C',
+        backgroundColor: 'rgba(124,255,60,0.08)',
+        tension: 0.25,
+        pointRadius: 2
+      }]
+    },
+    options: {
+      plugins:{legend:{display:false}},
+      scales: {
+        x: { ticks: {color:'#9aa4b2'} },
+        y: { ticks: {color:'#9aa4b2'} }
+      }
     }
+  });
 
-    main();
-  </script>
+  // Wallet logic
+  const connectBtn = document.getElementById('connectBtn');
+  const walletInfo = document.getElementById('walletInfo');
+  const balanceDisplay = document.getElementById('balanceDisplay');
+  let provider, signer;
+
+  async function connectWallet(){
+    if(!window.ethereum){
+      alert('Bitte MetaMask oder eine Web3-Wallet installieren.');
+      return;
+    }
+    try{
+      provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+      await provider.send('eth_requestAccounts', []);
+      signer = provider.getSigner();
+      const address = await signer.getAddress();
+      walletInfo.textContent = address;
+      // Show ETH balance (in USD approx via placeholder)
+      const balance = await provider.getBalance(address);
+      const eth = parseFloat(ethers.utils.formatEther(balance));
+      balanceDisplay.textContent = '$' + (eth*1600).toFixed(2); // placeholder: ETH price ~1600 USD (replace with real price API)
+    } catch(e){
+      console.error(e);
+      alert('Verbindung fehlgeschlagen.');
+    }
+  }
+  connectBtn.addEventListener('click', connectWallet);
+
+  // ENTER button (open app) — here it just alerts / could open mini-app frame
+  document.getElementById('enterBtn').addEventListener('click', () => {
+    alert('Opening The Shill Report... (This would deep-link or open an internal frame in a full implementation).');
+  });
+
+  // FUND WALLET (USDC) example
+  document.getElementById('fundBtn').addEventListener('click', async () => {
+    if(!signer){
+      alert('Bitte Wallet verbinden zuerst.');
+      return;
+    }
+    // Example: transfer a small amount of ETH to your receiving address (demo)
+    const receiving = 'RECEIVING_ADDRESS_HERE'; // <-- replace with your base/eth address
+    try{
+      const tx = await signer.sendTransaction({ to: receiving, value: ethers.utils.parseEther('0.001') });
+      alert('Transaktion gesendet. TX: ' + tx.hash);
+    } catch(err){
+      console.error(err);
+      alert('Transaktion fehlgeschlagen oder abgebrochen.');
+    }
+  });
+
+</script>
 </body>
 </html>
