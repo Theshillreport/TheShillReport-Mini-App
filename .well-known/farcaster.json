@@ -1,8 +1,14 @@
 {
-  "name": "The Shill Report Earn",
-  "icon": "https://theshillreport.io/icon.png",
-  "url": "https://theshillreport.io/earn-demo",
-  "buttons": [
-    {"label": "Connect Wallet", "action": "link"}
-  ]
+  "miniapp": {
+    "version": "1",
+    "name": "The Shill Report",
+    "iconUrl": "https://YOUR_DOMAIN/icon.png",
+    "homeUrl": "https://YOUR_DOMAIN/",
+    "splashImageUrl": "https://YOUR_DOMAIN/splash.png",
+    "splashBackgroundColor": "#000000",
+    "subtitle": "News & Earn",
+    "description": "Mini App für The Shill Report – Wallet connect, staking demo & earnings.",
+    "primaryCategory": "finance",
+    "tags": ["crypto","news","staking","earn"]
+  }
 }
