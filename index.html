@@ -154,7 +154,7 @@
       // Show ETH balance (in USD approx via placeholder)
       const balance = await provider.getBalance(address);
       const eth = parseFloat(ethers.utils.formatEther(balance));
-      balanceDisplay.textContent = '$' + (eth*1600).toFixed(2);https://api.etherscan.io/v2/api
+      balanceDisplay.textContent = '$' + (eth*1600).toFixed(2); // placeholder: ETH price ~1600 USD (replace with real price API)
     } catch(e){
       console.error(e);
       alert('Verbindung fehlgeschlagen.');
